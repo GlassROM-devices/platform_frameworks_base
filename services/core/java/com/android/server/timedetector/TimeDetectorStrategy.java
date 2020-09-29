@@ -64,6 +64,9 @@ public interface TimeDetectorStrategy extends Dumpable {
     @Origin
     int ORIGIN_NETWORK = 3;
 
+    /** Returns true if NITZ time updates is enabled. */
+    boolean isNITZTimeDetectionEnabled();
+
     /** Used when a time value originated from a gnss signal. */
     @Origin
     int ORIGIN_GNSS = 4;

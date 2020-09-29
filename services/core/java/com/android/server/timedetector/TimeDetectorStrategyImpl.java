@@ -55,7 +55,7 @@ import java.util.Objects;
  */
 public final class TimeDetectorStrategyImpl implements TimeDetectorStrategy {
 
-    private static final boolean DBG = false;
+    private static final boolean DBG = true;
     private static final String LOG_TAG = TimeDetectorService.TAG;
 
     /** A score value used to indicate "no score", either due to validation failure or age. */
@@ -244,7 +244,7 @@ public final class TimeDetectorStrategyImpl implements TimeDetectorStrategy {
 
     @Override
     public synchronized void suggestNetworkTime(@NonNull NetworkTimeSuggestion timeSuggestion) {
-        if (!validateAutoSuggestionTime(timeSuggestion.getUtcTime(), timeSuggestion)) {
+        if (timeSuggestion == null || !validateAutoSuggestionTime(timeSuggestion.getUtcTime(), timeSuggestion)) {
             return;
         }
 
@@ -268,6 +268,11 @@ public final class TimeDetectorStrategyImpl implements TimeDetectorStrategy {
 
     @Override
     public synchronized void suggestTelephonyTime(@NonNull TelephonyTimeSuggestion timeSuggestion) {
+        // is config_nitzUpdate is set to false, we disallow telephony time suggestions.
+        if (!mCallback.isNITZTimeDetectionEnabled()) {
+            return;
+        }
+
         // Empty time suggestion means that telephony network connectivity has been lost.
         // The passage of time is relentless, and we don't expect our users to use a time machine,
         // so we can continue relying on previous suggestions when we lose connectivity. This is
@@ -456,7 +461,7 @@ public final class TimeDetectorStrategyImpl implements TimeDetectorStrategy {
                             + ", bestTelephonySuggestion=" + bestTelephonySuggestion
                             + ", detectionReason=" + detectionReason;
                 }
-            } else if (origin == ORIGIN_NETWORK) {
+            } else if (mCallback.isNITZTimeDetectionEnabled() && origin == ORIGIN_NETWORK) {
                 NetworkTimeSuggestion networkSuggestion = findLatestValidNetworkSuggestion();
                 if (networkSuggestion != null) {
                     newUtcTime = networkSuggestion.getUtcTime();
