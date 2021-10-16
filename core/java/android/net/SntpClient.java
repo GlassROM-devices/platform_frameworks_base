@@ -27,6 +27,7 @@ import java.net.URLConnection;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 
@@ -143,7 +144,7 @@ public class SntpClient {
         } catch (UnknownHostException e) {
             Log.w(TAG, "Unknown host: " + host);
             EventLogTags.writeNtpFailure(host, e.toString());
-        }
+        } catch (MalformedURLException e) {} // exception should never be reached
 
         if (DBG) Log.d(TAG, "request time failed");
         return false;
