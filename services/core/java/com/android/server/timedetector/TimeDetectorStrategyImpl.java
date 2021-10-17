@@ -457,7 +457,7 @@ public final class TimeDetectorStrategyImpl implements TimeDetectorStrategy {
         for (int origin : originPriorities) {
             TimestampedValue<Long> newUtcTime = null;
             String cause = null;
-            if (origin == ORIGIN_TELEPHONY) {
+            if (mEnvironment.isNITZTimeDetectionEnabled() && origin == ORIGIN_TELEPHONY) {
                 TelephonyTimeSuggestion bestTelephonySuggestion = findBestTelephonySuggestion();
                 if (bestTelephonySuggestion != null) {
                     newUtcTime = bestTelephonySuggestion.getUtcTime();
@@ -465,7 +465,7 @@ public final class TimeDetectorStrategyImpl implements TimeDetectorStrategy {
                             + ", bestTelephonySuggestion=" + bestTelephonySuggestion
                             + ", detectionReason=" + detectionReason;
                 }
-            } else if (mEnvironment.isNITZTimeDetectionEnabled() && origin == ORIGIN_NETWORK) {
+            } else if (origin == ORIGIN_NETWORK) {
                 NetworkTimeSuggestion networkSuggestion = findLatestValidNetworkSuggestion();
                 if (networkSuggestion != null) {
                     newUtcTime = networkSuggestion.getUtcTime();
