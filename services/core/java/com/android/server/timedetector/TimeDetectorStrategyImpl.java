@@ -269,7 +269,7 @@ public final class TimeDetectorStrategyImpl implements TimeDetectorStrategy {
     @Override
     public synchronized void suggestTelephonyTime(@NonNull TelephonyTimeSuggestion timeSuggestion) {
         // is config_nitzUpdate is set to false, we disallow telephony time suggestions.
-        if (!mCallback.isNITZTimeDetectionEnabled()) {
+        if (!mEnvironment.isNITZTimeDetectionEnabled()) {
             return;
         }
 
@@ -461,7 +461,7 @@ public final class TimeDetectorStrategyImpl implements TimeDetectorStrategy {
                             + ", bestTelephonySuggestion=" + bestTelephonySuggestion
                             + ", detectionReason=" + detectionReason;
                 }
-            } else if (mCallback.isNITZTimeDetectionEnabled() && origin == ORIGIN_NETWORK) {
+            } else if (mEnvironment.isNITZTimeDetectionEnabled() && origin == ORIGIN_NETWORK) {
                 NetworkTimeSuggestion networkSuggestion = findLatestValidNetworkSuggestion();
                 if (networkSuggestion != null) {
                     newUtcTime = networkSuggestion.getUtcTime();
