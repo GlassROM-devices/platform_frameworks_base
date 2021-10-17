@@ -185,6 +185,10 @@ public final class TimeDetectorStrategyImpl implements TimeDetectorStrategy {
 
         /** Release the wake lock acquired by a call to {@link #acquireWakeLock()}. */
         void releaseWakeLock();
+
+        /** Returns true if NITZ time updates is enabled. */
+        boolean isNITZTimeDetectionEnabled();
+
     }
 
     static TimeDetectorStrategy create(
